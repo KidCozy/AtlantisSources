@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Meteor.h"
+#include "AttackRangeUI.h"
 
 // Sets default values
 AMeteor::AMeteor()
@@ -28,12 +29,16 @@ AMeteor::AMeteor()
 
 	//Col->set
 
+	Col->SetCollisionProfileName("Meteor");
+
 	SetRootComponent(Col);
 	Effect->SetupAttachment(RootComponent);
 	HitEffect->SetupAttachment(RootComponent);
 
 	Col->SetWorldScale3D(FVector(2.0f, 2.0f, 2.0f));
 	IsMove = true;
+
+
 }
 
 // Called when the game starts or when spawned
@@ -41,6 +46,10 @@ void AMeteor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	FVector SpawnPos(GetActorLocation().X, GetActorLocation().Y, 138.0f);
+
+	UI = (GetWorld()->SpawnActor<AAttackRangeUI>(SpawnPos, FRotator::ZeroRotator));
+
 }
 
 void AMeteor::PostInitializeComponents()
@@ -68,12 +77,14 @@ void AMeteor::OnCollisionOverlap(UPrimitiveComponent * OverlappedComp, AActor * 
 	HitEffect->SetActive(true);
 	HitEffect->OnSystemFinished.AddDynamic(this, &AMeteor::OnEffectFinished);
 	Col->SetWorldRotation(FRotator(0.0f, 0.0f, 0.0f));
-//	ABLOG_S(Warning);
+	UI->End();
+	ABLOG_S(Warning);
 }
 
 void AMeteor::OnEffectFinished(UParticleSystemComponent * PSystem)
 {
-	Destroy();
+	ABLOG_S(Warning);
+	Destroy(this);
 }
 
 

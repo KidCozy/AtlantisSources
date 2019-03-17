@@ -2,6 +2,7 @@
 
 #include "BTService_FindTarget.h"
 #include "DRController.h"
+#include "PHAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 UBTService_FindTarget::UBTService_FindTarget()
@@ -50,7 +51,7 @@ void UBTService_FindTarget::TickNode(UBehaviorTreeComponent & OwnerComp, uint8 *
 
 	if (Player != NULL) {
 	//	ABLOG(Warning, TEXT("%s"), *Player->GetName());
-		OwnerComp.GetBlackboardComponent()->SetValueAsObject(ADRController::TargetKey, Player);
+		OwnerComp.GetBlackboardComponent()->SetValueAsObject(APHAIController::TargetKey, Player);
 		
 	}
 }

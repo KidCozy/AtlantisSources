@@ -4,28 +4,31 @@
 
 #include "Atlantis.h"
 #include "AIController.h"
-#include "DRController.generated.h"
+#include "PHAIController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ATLANTIS_API ADRController : public AAIController
+class ATLANTIS_API APHAIController : public AAIController
 {
 	GENERATED_BODY()
 	
 public:
-	ADRController();
+	APHAIController();
 	virtual void Possess(APawn * InPawn)override;
 
 	static const FName TargetKey;
+	static const FName JumpAttackPosKey;
+	static const FName DistanceToCharacterKey;
 	static const FName NeedMoveKey;
-	static const FName GoPosKey;
+	static const FName NeedTurnKey;
+	static const FName NeedJumpKey;
 
 private:
+
 	UPROPERTY()
 	class UBehaviorTree * BT;
-
 	UPROPERTY()
 	class UBlackboardData * BB;
 };

@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BTTask_Attack.h"
-#include "DRController.h"
-#include "Dragon.h"
+#include "PHAIController.h"
+#include "Pharaoh.h"
 
 UBTTask_Attack::UBTTask_Attack()
 {
@@ -14,13 +14,13 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent & OwnerCo
 {
 	EBTNodeResult::Type Result = Super::ExecuteTask(OwnerComp, NodeMemory);
 
-	auto Dragon = Cast<ADragon>(OwnerComp.GetAIOwner()->GetPawn());
-	if (nullptr == Dragon)
+	auto Pharaoh = Cast<APharaoh>(OwnerComp.GetAIOwner()->GetPawn());
+	if (nullptr == Pharaoh)
 		return EBTNodeResult::Failed;
 
-	Dragon->Attack();
+	Pharaoh->Attack();
 	IsAttacking = true;
-	Dragon->OnAttackEnd.AddLambda([this]()->void {
+	Pharaoh->OnAttackEnd.AddLambda([this]()->void {
 		IsAttacking = false;
 	});
 
