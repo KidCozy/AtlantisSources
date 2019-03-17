@@ -73,9 +73,9 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		int EquipIndex;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly)
 		float CurrentYSpeed;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly)
 		float CurrentXSpeed;
 
 	UPROPERTY(EditAnywhere)

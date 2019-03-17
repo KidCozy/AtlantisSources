@@ -25,13 +25,21 @@ APlayerCharacter::APlayerCharacter()
 	SpringArm->bInheritPitch = true;
 	SpringArm->bInheritRoll = false;
 	SpringArm->bInheritYaw = true;
+	SpringArm->bUsePawnControlRotation = false;
+
+	SpringArm->bEnableCameraLag = true;
+	SpringArm->bEnableCameraRotationLag = true;
+	
+	SpringArm->CameraRotationLagSpeed = 10.0f;
+	SpringArm->CameraLagSpeed = 7.5f;
+
 	Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
 	Camera->SetRelativeLocation(FVector(0, 0, 50));
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
-	GetCharacterMovement()->MaxWalkSpeed = 300.0f;
+	GetCharacterMovement()->MaxWalkSpeed = 0.0f;
 
 	SpringArm->bUsePawnControlRotation = true;
 	Camera->bUsePawnControlRotation = true;
@@ -189,9 +197,6 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &APlayerCharacter::Attack);
 //	PlayerInputComponent->BindAction("Attack", IE_Released, this, &APlayerCharacter::StopAttack);
 
-	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &APlayerCharacter::Run);
-	PlayerInputComponent->BindAction("Run", IE_Released, this, &APlayerCharacter::Run);
-
 	PlayerInputComponent->BindAction("SwapWeapon_01", IE_Pressed, this, &APlayerCharacter::SwapWeapon_01);
 	PlayerInputComponent->BindAction("SwapWeapon_02", IE_Pressed, this, &APlayerCharacter::SwapWeapon_02);
 
@@ -272,17 +277,9 @@ void APlayerCharacter::MoveForward(float Value)
 
 	//	GEngine->AddOnScreenDebugMessage(4, 3.0f, FColor::White, FString::SanitizeFloat(Value));
 		AddMovementInput(Direction, Value);
-
-		if(Value >= 1.0f)
-			isWalk = true;
-		else {
-			GetCharacterMovement()->MaxWalkSpeed = 300.0f;
-			isWalk = false;
-			isRun = false;
-		}
 	}
 	else {
-		GetCharacterMovement()->MaxWalkSpeed = 300.0f;
+		GetCharacterMovement()->MaxWalkSpeed = 600.0f;
 	}
 
 	GEngine->AddOnScreenDebugMessage(2, 1.0f, FColor::Green, FString::SanitizeFloat(Value));
