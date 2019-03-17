@@ -20,7 +20,6 @@ class ATLANTIS_API UCharacterAnimInstance : public UAnimInstance
 public:
 	UCharacterAnimInstance();
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
-	void GetCurrentAnimLength();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadonly,
 		Category = Pawn)
@@ -52,7 +51,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadonly,
 		Category = Pawn)
-		int AttackStack = 0;
+		int CurrentCombo = 0;
 
 
 

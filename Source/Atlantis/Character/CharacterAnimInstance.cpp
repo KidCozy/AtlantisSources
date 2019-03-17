@@ -71,6 +71,8 @@ void UCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 		eqpindex = Cast<APlayerCharacter>(Pawn)->EquipIndex;
 
+		CurrentCombo = Cast<APlayerCharacter>(Pawn)->CurrentCombo;
+
 	//	GEngine->AddOnScreenDebugMessage(1, 3.0f, FColor::Red, FString::SanitizeFloat(PawnForwardSpeed) + FString::SanitizeFloat(PawnRightSpeed));
 	}
 }
@@ -116,7 +118,7 @@ void UCharacterAnimInstance::PlayAttackMontage()
 	
 }
 void UCharacterAnimInstance::PlayEvadeMontage() {
-		ABCHECK(!Montage_IsPlaying(EvadeMontage));
+		ABCHECK(!Montage_IsPlaying(EvadeMontage)&&!isAttack && CurrentCombo);
 			Montage_Play(EvadeMontage);
 	
 }

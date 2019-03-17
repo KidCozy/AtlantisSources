@@ -28,9 +28,8 @@ APlayerCharacter::APlayerCharacter()
 	SpringArm->bUsePawnControlRotation = false;
 
 	SpringArm->bEnableCameraLag = true;
-	SpringArm->bEnableCameraRotationLag = true;
-	
-	SpringArm->CameraRotationLagSpeed = 10.0f;
+	SpringArm->bEnableCameraRotationLag = false;
+
 	SpringArm->CameraLagSpeed = 7.5f;
 
 	Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
@@ -93,7 +92,7 @@ APlayerCharacter::APlayerCharacter()
 	GetMesh()->RelativeLocation = FVector(0, 0, -90);
 	GetMesh()->RelativeRotation = FRotator(0, -90, 0);
 
-
+	CurrentCombo = 0;
 	IsAttacking = false;
 	MaxCombo = 4;
 	AttackEndComboState();
@@ -397,12 +396,19 @@ void APlayerCharacter::Attack()
 	}
 	else
 	{
+
+		
 		ABCHECK(CurrentCombo == 0);
 		AttackStartComboState();
 		
+		FRotator rot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(),	Camera->GetComponentLocation() + (Camera->GetForwardVector() * 1000));
+		rot.Pitch= 0;
+		SetActorRotation(rot);
+
 		GEngine->AddOnScreenDebugMessage(4, 0.3f, FColor::Red, "ATTACK");
 		
 		IsAttacking = true;
+		isAttack = true;
 		GEngine->AddOnScreenDebugMessage(4, 0.3f, FColor::Red, FString::FormatAsNumber(IsAttacking));
 
 		ABAnim->PlayAttackMontage();
@@ -435,6 +441,7 @@ void APlayerCharacter::Skill01() {
 		ABAnim->PlaySkillMontage();
 		ABAnim->JumpToSkillMontageSection(CurrentCombo);
 		IsAttacking = true;
+		isAttack = true;
 		GEngine->AddOnScreenDebugMessage(4, 0.3f, FColor::Red, FString::FormatAsNumber(IsAttacking));
 
 
@@ -527,10 +534,12 @@ void APlayerCharacter::HitPostProcess() {
 
 void APlayerCharacter::OnAttackMontageEnded(UAnimMontage * Montage, bool bInterrupted)
 {
-	//GEngine->AddOnScreenDebugMessage(7, 3.0f, FColor::Orange,FString::SanitizeFloat(CurrentCombo));
+	GEngine->AddOnScreenDebugMessage(9, 3.0f, FColor::Orange,"Still Ending");
+		ABCHECK(isAttack);
 		ABCHECK(IsAttacking);
 		ABCHECK(CurrentCombo > 0);
 		IsAttacking = false;
+		isAttack = false;
 		AttackEndComboState();
 		
 }

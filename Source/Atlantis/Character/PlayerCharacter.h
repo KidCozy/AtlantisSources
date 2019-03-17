@@ -89,6 +89,10 @@ public:
 	UPROPERTY(EditAnywhere)
 		bool isWalk;
 
+
+	UPROPERTY(EditAnywhere)
+		int32 CurrentCombo;
+
 	bool CanSetWeapon();
 	void SetWeapon(class ACharacterWeapon* NewWeapon);
 	void SetWeapon(class ACharacterWeapon* NewWeapon, class ACharacterWeapon* NewWeapon2);
@@ -143,8 +147,6 @@ private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 		bool IsComboInputOn;
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
-		int32 CurrentCombo;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 		int32 MaxCombo;
