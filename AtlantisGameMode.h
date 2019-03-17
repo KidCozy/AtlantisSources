@@ -10,6 +10,7 @@ UCLASS(minimalapi)
 class AAtlantisGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
+private:
 
 public:
 	AAtlantisGameMode();

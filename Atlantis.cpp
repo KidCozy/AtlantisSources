@@ -9,3 +9,4 @@ DECLARE_LOG_CATEGORY_EXTERN(Atlantis, Log, All);
 #define ABLOG(Verbosity, Format, ...) UE_LOG(Atlantis, Verbosity, TEXT("%s %s"), *ABLOG_CALLINFO, *FString::Printf(Format, ##__VA_ARGS__))
 
 IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, Atlantis, "Atlantis" );
+ 
