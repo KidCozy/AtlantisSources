@@ -5,7 +5,7 @@
 #include "PHAIController.h"
 #include "DrawDebugHelpers.h"
 #include "time.h"
-#include "Dragon/Meteor.h"
+#include "Meteor.h"
 #include "NavigationSystem.h"
 #include "AttackRangeUI.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"

@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BTTask_TurnToPlayer.h"
-#include "DRController.h"
 #include "Pharaoh.h"
+#include "PHAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 UBTTask_TurnToPlayer::UBTTask_TurnToPlayer()
@@ -18,7 +18,7 @@ EBTNodeResult::Type UBTTask_TurnToPlayer::ExecuteTask(UBehaviorTreeComponent & O
 	if (nullptr == Pharaoh)
 		return EBTNodeResult::Failed;
 
-	auto Target = Cast<APawn>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(ADRController::TargetKey));
+	auto Target = Cast<APawn>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(APHAIController::TargetKey));
 	if(nullptr == Target)
 		return EBTNodeResult::Failed;
 

@@ -3,7 +3,7 @@
 #include "BTTask_SelectPatten.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "PHAIController.h"
-#include "PlayerCharacter.h"
+#include"Character/PlayerCharacter.h"
 #include "Pharaoh.h"
 
 UBTTask_SelectPatten::UBTTask_SelectPatten()

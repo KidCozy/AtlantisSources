@@ -1,14 +1,14 @@
 // Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
 
 #include "AtlantisGameMode.h"
-#include "AtlantisCharacter.h"
+#include "Character/AtlantisCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 
 AAtlantisGameMode::AAtlantisGameMode()
 {
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Script/Atlantis.PlayerCharacter"));
-	static ConstructorHelpers::FClassFinder<AHUD> HUD(TEXT("Blueprint'/Game/UI/EditorHUD_C.EditorHUD_C'"));
+	static ConstructorHelpers::FClassFinder<AHUD> HUD(TEXT("Blueprint'/Game/UI/EditorHUD.EditorHUD'"));
 	
 	
 	if (PlayerPawnBPClass.Class != NULL)
