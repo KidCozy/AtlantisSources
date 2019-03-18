@@ -15,6 +15,10 @@ namespace direction {
 		BACKWARD,
 		LEFT,
 		RIGHT,
+		LEFTFORWARD,
+		RIGHTFORWARD,
+		LEFTBACKWARD,
+		RIGHTBACKWARD,
 	};
 }
 
@@ -128,7 +132,7 @@ public:
 	void AttackStartComboState();
 	void AttackEndComboState();
 	void AttackCheck();
-	void HitShake();
+	void HitShake(float Scalar);
 	void HitPostProcess();
 
 	void SwapWeapon_01();

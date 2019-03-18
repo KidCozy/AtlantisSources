@@ -491,7 +491,7 @@ void APlayerCharacter::Skill02()
 
 			//		HitResult[0].Actor.Get()->SetActorLocation(FMath::Lerp(HitResult[0].Actor.Get()->GetActorLocation(), GetActorLocation() + (GetActorForwardVector()*DragDistance, 0.2f)));
 					
-					HitShake();
+					HitShake(2.0f);
 					//			ABLOG(Warning, TEXT("Hit Actor Name : %s"), *HitResult.Actor->GetName());
 
 					FDamageEvent DamageEvent;
@@ -506,11 +506,11 @@ void APlayerCharacter::Skill02()
 	}
 }
 
-void APlayerCharacter::HitShake() {
+void APlayerCharacter::HitShake(float Scalar) {
 	FTimerHandle time_;
 	if (CameraShake != nullptr)
 	{
-		GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(CameraShake, 1);
+		GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(CameraShake, Scalar);
 	}
 	if (ForceFeedBack != nullptr) {
 		GetWorld()->GetFirstPlayerController()->ClientPlayForceFeedback(ForceFeedBack, false, "Pawn");
@@ -534,12 +534,15 @@ void APlayerCharacter::HitPostProcess() {
 
 void APlayerCharacter::OnAttackMontageEnded(UAnimMontage * Montage, bool bInterrupted)
 {
+	
+
 	GEngine->AddOnScreenDebugMessage(9, 3.0f, FColor::Orange,"Still Ending");
 		ABCHECK(isAttack);
-		ABCHECK(IsAttacking);
 		ABCHECK(CurrentCombo > 0);
 		IsAttacking = false;
 		isAttack = false;
+		
+
 		AttackEndComboState();
 		
 }
@@ -577,7 +580,7 @@ void APlayerCharacter::AttackCheck()
 	{
 		if (HitResult.Actor.IsValid())
 		{
-			HitShake();
+			HitShake(1.5f);
 //			ABLOG(Warning, TEXT("Hit Actor Name : %s"), *HitResult.Actor->GetName());
 
 			FDamageEvent DamageEvent;
