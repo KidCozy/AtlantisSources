@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "PlayerCharacter.h"
+#include "Character/PlayerCharacter.h"
 #include"CharacterAnimInstance.h"
 #include"CharacterWeapon.h"
 #include"CharacterSubWeapon.h"
@@ -17,7 +17,6 @@ APlayerCharacter::APlayerCharacter()
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
 	AudioComp = CreateDefaultSubobject<UAudioComponent>(TEXT("AUDIO"));
-	AttackCurve = CreateDefaultSubobject<UCurveFloat>(TEXT("CURVE"));
 //	CameraShake = CreateDefaultSubobject<UCameraShake>(TEXT("CAMERASHAKE"));
 
 	
@@ -76,20 +75,11 @@ APlayerCharacter::APlayerCharacter()
 		GetMesh()->SetAnimInstanceClass(CHARACTER_ANIM.Class);
 	}
 
-	
-
 	static ConstructorHelpers::FClassFinder<UCameraShake>
 		CAMERASHAKE(TEXT("/Game/Animations/AnimBP/Camera/Attack_CameraShake.Attack_CameraShake_C"));
 	static ConstructorHelpers::FObjectFinder<UForceFeedbackEffect>
 		FORCEFEEDBACK_CAMERASHAKE(TEXT("/Game/Animations/AnimBP/Camera/AttackFeedBack.AttackFeedBack"));
 
-	static ConstructorHelpers::FObjectFinder<UCurveFloat>
-		ATTACK_CURVE(TEXT("CurveFloat'/Game/Temp/AttackStepCurve.AttackStepCurve'"));
-
-
-	if (ATTACK_CURVE.Succeeded()) {
-		AttackCurve = ATTACK_CURVE.Object;
-	}
 
 	if (CAMERASHAKE.Succeeded()) {
 		CameraShake = CAMERASHAKE.Class;
@@ -98,8 +88,6 @@ APlayerCharacter::APlayerCharacter()
 	if (FORCEFEEDBACK_CAMERASHAKE.Succeeded()) {
 		ForceFeedBack = FORCEFEEDBACK_CAMERASHAKE.Object;
 	}
-
-
 
 	GetMesh()->RelativeLocation = FVector(0, 0, -90);
 	GetMesh()->RelativeRotation = FRotator(0, -90, 0);
@@ -142,8 +130,8 @@ APlayerCharacter::APlayerCharacter()
 
 	EquipIndex = 1;
 
-	isMoveable = true;
-	isDowned = false;
+
+
 }
 
 // Called when the game starts or when spawned
@@ -275,9 +263,8 @@ void APlayerCharacter::Run() {
 void APlayerCharacter::MoveForward(float Value)
 {
 	
-	ABCHECK(isMoveable);
 	ABAnim->ForwardDelta = Value;
-	
+
 	if ((Value != 0.0f) && !IsAttacking)
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -300,9 +287,9 @@ void APlayerCharacter::MoveForward(float Value)
 
 void APlayerCharacter::MoveRight(float Value)
 {
-	ABCHECK(isMoveable);
+
 	ABAnim->RightDelta = Value;
-	
+
 	if ((Controller != NULL) && (Value != 0.0f) && !isRun && !IsAttacking)
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -397,8 +384,7 @@ void APlayerCharacter::StopAttack()
 }
 void APlayerCharacter::Attack()
 {
-	ABCHECK(!isDowned);
-
+	
 	if (IsAttacking)
 	{
 		GEngine->AddOnScreenDebugMessage(5, 3.0f, FColor::Red, "CANT ATTACK");
@@ -435,7 +421,7 @@ void APlayerCharacter::Attack()
 
 void APlayerCharacter::Skill01() {
 
-	ABCHECK(!isDowned);
+
 	if (IsAttacking)
 	{
 		GEngine->AddOnScreenDebugMessage(5, 3.0f, FColor::Red, "CANT SKILL");
@@ -464,7 +450,7 @@ void APlayerCharacter::Skill01() {
 
 void APlayerCharacter::Skill02()
 {
-	ABCHECK(!isDowned);
+	
 	float KnockDist = 500.0f;
 	
 	GEngine->AddOnScreenDebugMessage(8, 2.0f, FColor::Black, "RAY");
@@ -496,7 +482,7 @@ void APlayerCharacter::Skill02()
 
 			DrawDebugSphere(GetWorld(), GetActorLocation(), AttackRadius, 6, FColor::Cyan, false, 3.0f, 0, 4.0f);
 
-			
+
 			if (bResult)
 			{
 				if (HitResult[0].Actor.IsValid())
@@ -505,11 +491,7 @@ void APlayerCharacter::Skill02()
 
 			//		HitResult[0].Actor.Get()->SetActorLocation(FMath::Lerp(HitResult[0].Actor.Get()->GetActorLocation(), GetActorLocation() + (GetActorForwardVector()*DragDistance, 0.2f)));
 					
-					//HitShake(2.0f);
-			//		UPlayerGameInstance::GETi
-
-					auto Inst_ = Cast<UPlayerGameInstance>(GetGameInstance());
-					Inst_->HitShake(CameraShake, 1.25f);
+					HitShake();
 					//			ABLOG(Warning, TEXT("Hit Actor Name : %s"), *HitResult.Actor->GetName());
 
 					FDamageEvent DamageEvent;
@@ -524,6 +506,25 @@ void APlayerCharacter::Skill02()
 	}
 }
 
+void APlayerCharacter::HitShake(float scale) {
+	FTimerHandle time_;
+	if (CameraShake != nullptr)
+	{
+		GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(CameraShake, 1);
+	}
+	if (ForceFeedBack != nullptr) {
+		GetWorld()->GetFirstPlayerController()->ClientPlayForceFeedback(ForceFeedBack, false, "Pawn");
+	}
+
+	AudioComp->Play();
+
+
+	//Camera->PostProcessSettings.DepthOfFieldScale = 0.5f;
+	Camera->PostProcessSettings.SceneFringeIntensity = 5.0f;
+	GetWorldTimerManager().SetTimer(time_, this, &APlayerCharacter::HitPostProcess, 0.5f, false);
+
+
+}
 
 void APlayerCharacter::HitPostProcess() {
 	Camera->PostProcessSettings.SceneFringeIntensity = 0.0f;
@@ -534,8 +535,6 @@ void APlayerCharacter::HitPostProcess() {
 void APlayerCharacter::OnAttackMontageEnded(UAnimMontage * Montage, bool bInterrupted)
 {
 	
-	isMoveable = true;
-	isDowned = false;
 
 	GEngine->AddOnScreenDebugMessage(9, 3.0f, FColor::Orange,"Still Ending");
 		ABCHECK(isAttack);
@@ -543,7 +542,7 @@ void APlayerCharacter::OnAttackMontageEnded(UAnimMontage * Montage, bool bInterr
 		IsAttacking = false;
 		isAttack = false;
 		
-		//GetWorldTimerManager()
+
 		AttackEndComboState();
 		
 }
@@ -581,37 +580,11 @@ void APlayerCharacter::AttackCheck()
 	{
 		if (HitResult.Actor.IsValid())
 		{
-			FTimerHandle FTime_;
-			Cast<UPlayerGameInstance>(GetGameInstance())->HitShake(CameraShake, 1.25f);
+			HitShake();
 //			ABLOG(Warning, TEXT("Hit Actor Name : %s"), *HitResult.Actor->GetName());
-
-			ABAnim->Montage_SetPlayRate(ABAnim->GetCurrentActiveMontage(), 0.5f);
-			GetWorld()->GetTimerManager().SetTimer(FTime_,this,&APlayerCharacter::SetTimeScaleNormal, 0.005f, false);
 
 			FDamageEvent DamageEvent;
 			HitResult.Actor->TakeDamage(50.0f, DamageEvent, GetController(), this);
 		}
 	}
-}
-
-void APlayerCharacter::SetTimeScaleNormal() {
-	ABAnim->Montage_SetPlayRate(ABAnim->GetCurrentActiveMontage(), 1.0f);
-
-}
-
-void APlayerCharacter::GetHit(AActor* CauserActor) {
-	
-	ABCHECK(IsValid(CauserActor));
-	FRotator rot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CauserActor->GetActorLocation() + (-CauserActor->GetActorForwardVector() * 1000));
-	rot.Pitch = 0;
-	SetActorRotation(rot);
-
-	isMoveable = false;
-	isDowned = true;
-
-	ABAnim->PlayGetHitMontage();
-
-
-	
-
 }

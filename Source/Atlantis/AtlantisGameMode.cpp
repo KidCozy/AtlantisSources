@@ -8,7 +8,7 @@ AAtlantisGameMode::AAtlantisGameMode()
 {
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Script/Atlantis.PlayerCharacter"));
-	static ConstructorHelpers::FClassFinder<AHUD> HUD(TEXT("Blueprint'/Game/UI/EditorHUD.EditorHUD'"));
+//	static ConstructorHelpers::FClassFinder<AHUD> HUD(TEXT("Blueprint'/Game/UI/EditorHUD.EditorHUD'"));
 	
 	
 	if (PlayerPawnBPClass.Class != NULL)
@@ -16,12 +16,12 @@ AAtlantisGameMode::AAtlantisGameMode()
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 
 	}
-	if (HUD.Class != NULL) {
+	//if (HUD.Class != NULL) {
 
-		
-		HUDClass = HUD.Class;
+	//	
+	//	HUDClass = HUD.Class;
 
-	//	Editor->SetWidgetClass(EDITOR.Class);
-	//	Editor->SetDrawSize(FVector2D(150.0f, 50.0f));
-	}
+	////	Editor->SetWidgetClass(EDITOR.Class);
+	////	Editor->SetDrawSize(FVector2D(150.0f, 50.0f));
+	//}
 }

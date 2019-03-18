@@ -27,6 +27,9 @@ AMeteor::AMeteor()
 		HitEffect->bAutoActivate = false;
 	}
 
+	
+
+
 	//Col->set
 
 	Col->SetCollisionProfileName("Meteor");
@@ -38,7 +41,7 @@ AMeteor::AMeteor()
 	Col->SetWorldScale3D(FVector(2.0f, 2.0f, 2.0f));
 	IsMove = true;
 
-
+	HitEffect->OnSystemFinished.AddDynamic(this, &AMeteor::OnEffectFinished);
 }
 
 // Called when the game starts or when spawned
@@ -75,15 +78,23 @@ void AMeteor::OnCollisionOverlap(UPrimitiveComponent * OverlappedComp, AActor * 
 	IsMove = false;
 	Effect->SetActive(false);
 	HitEffect->SetActive(true);
-	HitEffect->OnSystemFinished.AddDynamic(this, &AMeteor::OnEffectFinished);
+
+	ABCHECK(IsValid(Cast<APlayerCharacter>(OtherActor)));
+	auto Character = Cast<APlayerCharacter>(OtherActor);
+	Character->GetHit(this);
+
+	auto Inst_ = Cast<UPlayerGameInstance>(GetGameInstance());
+	Inst_->HitShake(Inst_->CShakeBossMeteor, 10.0f);
+
+	//Cast<UPlayerGameInstance>(&UGameInstance::UGameInstance())->CShakeBossMeteor;
 	Col->SetWorldRotation(FRotator(0.0f, 0.0f, 0.0f));
 	UI->End();
-	ABLOG_S(Warning);
+//	ABLOG_S(Warning);
 }
 
 void AMeteor::OnEffectFinished(UParticleSystemComponent * PSystem)
 {
-	ABLOG_S(Warning);
+//	ABLOG_S(Warning);
 	Destroy(this);
 }
 

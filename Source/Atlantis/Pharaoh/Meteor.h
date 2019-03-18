@@ -29,6 +29,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = Effect)
 	UParticleSystemComponent * HitEffect;
 
+
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

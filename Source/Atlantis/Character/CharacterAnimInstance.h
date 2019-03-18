@@ -53,7 +53,9 @@ public:
 		Category = Pawn)
 		int CurrentCombo = 0;
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadonly,
+		Category = Pawn)
+		bool isDowned;
 
 public:
 	FOnNextAttackCheckDelegate OnNextAttackCheck;
@@ -65,6 +67,7 @@ public:
 	void PlayAttackMontage();
 	void PlayEvadeMontage();
 	void PlaySkillMontage();
+	void PlayGetHitMontage();
 	void JumpToAttackMontageSection(int32 NewSection);
 	void JumpToSkillMontageSection(int32 NewSection);
 	
@@ -112,6 +115,11 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true)) // Combo 03
 		UAnimMontage* Skill01Montage;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true)) // Combo 03
+		UAnimMontage* GetHitMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true)) // Combo 03
+		UAnimMontage* GetUpMontage;
 
 
 //	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))

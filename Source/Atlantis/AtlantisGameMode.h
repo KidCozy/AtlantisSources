@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "Atlantis.h"
 #include "GameFramework/GameModeBase.h"
 #include "AtlantisGameMode.generated.h"
 
@@ -10,7 +10,6 @@ UCLASS(minimalapi)
 class AAtlantisGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-private:
 
 public:
 	AAtlantisGameMode();

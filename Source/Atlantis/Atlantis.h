@@ -3,9 +3,8 @@
 #pragma once
 
 #include "EngineMinimal.h"
-
 #include"Character/PlayerCharacter.h"
-
+#include"Library/PlayerGameInstance.h"
 #include"Engine.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(Atlantis, Log, All);

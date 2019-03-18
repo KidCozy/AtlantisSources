@@ -168,8 +168,11 @@ void APharaoh::AttackCheck()
 	{
 		if (HitResult.Actor.IsValid())
 		{
+			ABCHECK(IsValid(Cast<APlayerCharacter>(HitResult.Actor)));
+			auto Character = Cast<APlayerCharacter>(HitResult.Actor);
+			Character->GetHit(this);
 			//AttackArea->SetActive(true);
-			ABLOG(Warning, TEXT("Hit Actor Name : %s"), *HitResult.Actor->GetName());
+//			ABLOG(Warning, TEXT("Hit Actor Name : %s"), *HitResult.Actor->GetName());
 		}
 	}
 
@@ -191,6 +194,7 @@ int APharaoh::SelectPattern(float Speed, FVector ChPos)
 	if(Speed > 1000.0f)
 	Pattern = AttackPatten::PhAttack4;
 
+	//Pattern = AttackPatten::PhAttack2;
 	switch (Pattern)
 	{
 	case Noting:

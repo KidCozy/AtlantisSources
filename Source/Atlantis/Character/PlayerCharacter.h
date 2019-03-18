@@ -93,6 +93,10 @@ public:
 	UPROPERTY(EditAnywhere)
 		bool isWalk;
 
+	UPROPERTY(EditAnywhere)
+		bool isDowned;
+
+
 
 	UPROPERTY(EditAnywhere)
 		int32 CurrentCombo;
@@ -119,6 +123,13 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	UAudioComponent* AudioComp;
 
+	UPROPERTY(VisibleAnywhere)
+		UCurveFloat* AttackCurve;
+
+	UPROPERTY(VisibleAnywhere)
+		class UCharacterAnimInstance* ABAnim;
+
+
 	FTimerHandle AttackDelay_;
 	
 	void Attack();
@@ -132,11 +143,15 @@ public:
 	void AttackStartComboState();
 	void AttackEndComboState();
 	void AttackCheck();
-	void HitShake(float Scalar);
+	
 	void HitPostProcess();
 
 	void SwapWeapon_01();
 	void SwapWeapon_02();
+
+	void SetTimeScaleNormal();
+
+	void GetHit(AActor* CauserActor);
 
 private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
@@ -155,8 +170,7 @@ private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 		int32 MaxCombo;
 
-	UPROPERTY()
-		class UCharacterAnimInstance* ABAnim;
+
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 		float AttackRange;

@@ -22,6 +22,10 @@ UCharacterAnimInstance::UCharacterAnimInstance() {
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> SKILL01_MONTAGE(TEXT("AnimMontage'/Game/Animations/AnimBP/PlayerCharacterGRABSMASH.PlayerCharacterGRABSMASH'"));
 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> GETHIT_MONTAGE(TEXT("AnimMontage'/Game/Animations/AnimBP/Hit/PlayerCharacter_GETHIT.PlayerCharacter_GETHIT'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> GETUP_MONTAGE(TEXT("AnimMontage'/Game/Animations/AnimBP/Hit/PlayerCharacter_GETUP.PlayerCharacter_GETUP'"));
+
+
 	if (ATTACK_MONTAGE.Succeeded())
 	{
 		AttackMontage = ATTACK_MONTAGE.Object;
@@ -52,6 +56,13 @@ UCharacterAnimInstance::UCharacterAnimInstance() {
 		Skill01Montage = SKILL01_MONTAGE.Object;
 	}
 
+	if (GETHIT_MONTAGE.Succeeded()) {
+		GetHitMontage = GETHIT_MONTAGE.Object;
+	}
+
+	if (GETUP_MONTAGE.Succeeded()) {
+		GetUpMontage = GETUP_MONTAGE.Object;
+	}
 }
 
 void UCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -62,17 +73,20 @@ void UCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	
 	if (::IsValid(Pawn))
 	{
+		auto Character = Cast<APlayerCharacter>(Pawn);
+
 		isEvade = Pawn->GetMovementComponent()->IsFalling();
 	//	CurrentMachine = GetStateMachineInstance(0);
-		isAttack = Cast<APlayerCharacter>(Pawn)->isAttack;
+		isAttack = Character->isAttack;
 
-		PawnForwardSpeed = Cast<APlayerCharacter>(Pawn)->CurrentYSpeed;
-		PawnRightSpeed = Cast<APlayerCharacter>(Pawn)->CurrentXSpeed;
+		PawnForwardSpeed = Character->CurrentYSpeed;
+		PawnRightSpeed = Character->CurrentXSpeed;
 
-		eqpindex = Cast<APlayerCharacter>(Pawn)->EquipIndex;
+		eqpindex = Character->EquipIndex;
 
-		CurrentCombo = Cast<APlayerCharacter>(Pawn)->CurrentCombo;
+		CurrentCombo = Character->CurrentCombo;
 
+		isDowned = Character->isDowned;
 	//	GEngine->AddOnScreenDebugMessage(1, 3.0f, FColor::Red, FString::SanitizeFloat(PawnForwardSpeed) + FString::SanitizeFloat(PawnRightSpeed));
 	}
 }
@@ -118,7 +132,7 @@ void UCharacterAnimInstance::PlayAttackMontage()
 	
 }
 void UCharacterAnimInstance::PlayEvadeMontage() {
-		ABCHECK(!Montage_IsPlaying(EvadeMontage)&&!isAttack && CurrentCombo);
+		ABCHECK(!Montage_IsPlaying(EvadeMontage)&&!isAttack && CurrentCombo <= 0);
 			Montage_Play(EvadeMontage);
 	
 }
@@ -134,6 +148,12 @@ void UCharacterAnimInstance::PlaySkillMontage()
 	}
 
 }
+
+void UCharacterAnimInstance::PlayGetHitMontage() {
+
+	Montage_Play(GetHitMontage, 1.0f);
+}
+
 void UCharacterAnimInstance::JumpToAttackMontageSection(int32 NewSection)
 {
 	ABCHECK(!IsDead);
