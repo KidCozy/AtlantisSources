@@ -144,6 +144,8 @@ public:
 	void AttackEndComboState();
 	void AttackCheck();
 	
+	void ActionShake();
+
 	void HitPostProcess();
 
 	void SwapWeapon_01();

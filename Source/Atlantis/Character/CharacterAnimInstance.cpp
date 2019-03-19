@@ -209,6 +209,11 @@ void UCharacterAnimInstance::AnimNotify_NextAttackCheck()
 	OnNextAttackCheck.Broadcast();
 }
 
+void UCharacterAnimInstance::AnimNotify_ActionShake()
+{
+	OnActionShake.Broadcast();
+}
+
 FName UCharacterAnimInstance::GetAttackMontageSectionName(int32 Section)
 {
 

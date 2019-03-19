@@ -183,6 +183,7 @@ void APlayerCharacter::PostInitializeComponents()
 	});
 
 	ABAnim->OnAttackHitCheck.AddUObject(this, &APlayerCharacter::AttackCheck);
+	ABAnim->OnActionShake.AddUObject(this, &APlayerCharacter::ActionShake);
 }
 // Called every frame
 void APlayerCharacter::Tick(float DeltaTime)
@@ -494,7 +495,7 @@ void APlayerCharacter::Skill02()
 				GetActorLocation(),
 				GetActorLocation() + GetActorForwardVector() * KnockDist,
 				FQuat::Identity,
-				ECollisionChannel::ECC_GameTraceChannel2,
+				ECollisionChannel::ECC_Pawn,
 				FCollisionShape::MakeSphere(AttackRadius),
 				Params);
 			
@@ -579,7 +580,7 @@ void APlayerCharacter::AttackCheck()
 		GetActorLocation(),
 		GetActorLocation() + GetActorForwardVector() * AttackRange,
 		FQuat::Identity,
-		ECollisionChannel::ECC_GameTraceChannel2,
+		ECollisionChannel::ECC_Pawn,
 		FCollisionShape::MakeSphere(AttackRadius),
 		Params);
 
@@ -587,12 +588,10 @@ void APlayerCharacter::AttackCheck()
 	{
 		if (HitResult.Actor.IsValid())
 		{
-			FTimerHandle FTime_;
 			Cast<UPlayerGameInstance>(GetGameInstance())->HitShake(CameraShake, 1.25f);
 //			ABLOG(Warning, TEXT("Hit Actor Name : %s"), *HitResult.Actor->GetName());
 
-			ABAnim->Montage_SetPlayRate(ABAnim->GetCurrentActiveMontage(), 0.5f);
-			GetWorld()->GetTimerManager().SetTimer(FTime_,this,&APlayerCharacter::SetTimeScaleNormal, 0.005f, false);
+		
 
 			FDamageEvent DamageEvent;
 			HitResult.Actor->TakeDamage(50.0f, DamageEvent, GetController(), this);
@@ -600,9 +599,17 @@ void APlayerCharacter::AttackCheck()
 	}
 }
 
-void APlayerCharacter::SetTimeScaleNormal() {
-	ABAnim->Montage_SetPlayRate(ABAnim->GetCurrentActiveMontage(), 1.0f);
+void APlayerCharacter::ActionShake()
+{
+	FTimerHandle FTime_;
+	Cast<UPlayerGameInstance>(GetGameInstance())->HitShake(CameraShake, 1.25f);
+	UGameplayStatics::SetGlobalTimeDilation(GetWorld(),0.1f);
+	GetWorld()->GetTimerManager().SetTimer(FTime_, this, &APlayerCharacter::SetTimeScaleNormal, 0.005f, false);
+}
 
+void APlayerCharacter::SetTimeScaleNormal() {
+
+	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0f);
 }
 
 void APlayerCharacter::GetHit(AActor* CauserActor) {

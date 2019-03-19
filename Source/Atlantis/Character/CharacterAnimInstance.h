@@ -10,6 +10,7 @@
 
 DECLARE_MULTICAST_DELEGATE(FOnNextAttackCheckDelegate);
 DECLARE_MULTICAST_DELEGATE(FOnAttackHitCheckDelegate);
+DECLARE_MULTICAST_DELEGATE(FOnActionShakeDelegate);
 /**
  * 
  */
@@ -60,7 +61,7 @@ public:
 public:
 	FOnNextAttackCheckDelegate OnNextAttackCheck;
 	FOnAttackHitCheckDelegate OnAttackHitCheck;
-
+	FOnActionShakeDelegate OnActionShake;
 	
 
 	void SetDeadAnim() { IsDead = true; }
@@ -81,6 +82,9 @@ private:
 
 	UFUNCTION()
 		void AnimNotify_NextAttackCheck();
+
+	UFUNCTION()
+		void AnimNotify_ActionShake();
 
 	FName GetAttackMontageSectionName(int32 Section);
 	FName GetSkillMontageSectionName(int32 Section);

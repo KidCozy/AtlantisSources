@@ -124,6 +124,8 @@ void APharaoh::AttackCheck()
 	{
 	case AttackPatten::PhAttack4:
 		AttackRangeUI->SetActive();
+		auto Inst_ = Cast<UPlayerGameInstance>(GetGameInstance());
+		Inst_->HitShake(Inst_->CShakeBossMeteor, 5.0f);
 		break;
 	}
 
@@ -142,27 +144,27 @@ void APharaoh::AttackCheck()
 	);
 
 
-	#if ENABLE_DRAW_DEBUG
-	
-		FVector TraceVec = GetActorForwardVector() * 484.0f;
-		//FVector Center = GetActorLocation()+ GetActorForwardVector()*500.0f + GetActorUpVector() * -60.0f + TraceVec * 0.5f;
-		FVector Center = GetActorLocation() + GetActorUpVector() * -160.0f + TraceVec * 0.5f;
-		//float HalfHeight = AttackRange * 0.5f + AttackRadius;
-		float HalfHeight = 484.0f * 0.5f + 80.0f;
-		FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat();
-		FColor DrawColor = bResult ? FColor::Green : FColor::Red;
-		float DebugLifeTime = 5.0f;
-	
-		DrawDebugCapsule(GetWorld(),
-			Center,
-			HalfHeight,
-			AttackRadius,
-			CapsuleRot,
-			DrawColor,
-			false,
-			DebugLifeTime);
-	
-	#endif
+	//#if ENABLE_DRAW_DEBUG
+	//
+	//	FVector TraceVec = GetActorForwardVector() * 484.0f;
+	//	//FVector Center = GetActorLocation()+ GetActorForwardVector()*500.0f + GetActorUpVector() * -60.0f + TraceVec * 0.5f;
+	//	FVector Center = GetActorLocation() + GetActorUpVector() * -160.0f + TraceVec * 0.5f;
+	//	//float HalfHeight = AttackRange * 0.5f + AttackRadius;
+	//	float HalfHeight = 484.0f * 0.5f + 80.0f;
+	//	FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat();
+	//	FColor DrawColor = bResult ? FColor::Green : FColor::Red;
+	//	float DebugLifeTime = 5.0f;
+	//
+	//	DrawDebugCapsule(GetWorld(),
+	//		Center,
+	//		HalfHeight,
+	//		AttackRadius,
+	//		CapsuleRot,
+	//		DrawColor,
+	//		false,
+	//		DebugLifeTime);
+	//
+	//#endif
 
 	if (bResult)
 	{
@@ -171,6 +173,9 @@ void APharaoh::AttackCheck()
 			ABCHECK(IsValid(Cast<APlayerCharacter>(HitResult.Actor)));
 			auto Character = Cast<APlayerCharacter>(HitResult.Actor);
 			Character->GetHit(this);
+			auto Inst_ = Cast<UPlayerGameInstance>(GetGameInstance());
+			Inst_->HitShake(Inst_->CShakeBossMeteor, 5.0f);
+
 			//AttackArea->SetActive(true);
 //			ABLOG(Warning, TEXT("Hit Actor Name : %s"), *HitResult.Actor->GetName());
 		}

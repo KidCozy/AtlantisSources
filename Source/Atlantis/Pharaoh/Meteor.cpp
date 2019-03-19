@@ -79,16 +79,18 @@ void AMeteor::OnCollisionOverlap(UPrimitiveComponent * OverlappedComp, AActor * 
 	Effect->SetActive(false);
 	HitEffect->SetActive(true);
 
-	ABCHECK(IsValid(Cast<APlayerCharacter>(OtherActor)));
-	auto Character = Cast<APlayerCharacter>(OtherActor);
-	Character->GetHit(this);
+
 
 	auto Inst_ = Cast<UPlayerGameInstance>(GetGameInstance());
-	Inst_->HitShake(Inst_->CShakeBossMeteor, 10.0f);
+	Inst_->HitShake(Inst_->CShakeBossMeteor, 5.0f);
 
 	//Cast<UPlayerGameInstance>(&UGameInstance::UGameInstance())->CShakeBossMeteor;
 	Col->SetWorldRotation(FRotator(0.0f, 0.0f, 0.0f));
 	UI->End();
+
+	ABCHECK(IsValid(Cast<APlayerCharacter>(OtherActor)));
+	auto Character = Cast<APlayerCharacter>(OtherActor);
+	Character->GetHit(this);
 //	ABLOG_S(Warning);
 }
 
