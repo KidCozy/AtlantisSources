@@ -44,7 +44,7 @@ APlayerCharacter::APlayerCharacter()
 	SpringArm->bUsePawnControlRotation = true;
 	Camera->bUsePawnControlRotation = true;
 //	Camera->PostProcessSettings.GrainIntensity = 5.0f;
-
+	Camera->SetRelativeLocation(FVector(0, 0, 0));
 	Camera->PostProcessSettings.ChromaticAberrationStartOffset = 0.0f;
 	//Camera->PostProcessSettings.ChromaticAberrationStartOffset = 10.0f;
 //	FPostProcessSettings::BloomDirtMaskIntensity;
@@ -323,13 +323,6 @@ void APlayerCharacter::ViewTurnRight(float NewAxisValue)
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 		AddControllerYawInput(NewAxisValue);
 
-		//const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-	
-		//if (!IsAttacking)
-		//{
-		//	SetActorRelativeRotation(YawRotation);
-		//}
-		//Controller->SetControlRotation(YawRotation);
 		
 
 }
@@ -338,8 +331,21 @@ void APlayerCharacter::ViewTurnUp(float NewAxisValue)
 {
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		
+
+		Dist_ -= NewAxisValue * 10;
+		Dist_ = FMath::Clamp(Dist_, 200.0f, 1000.0f);
+
+		SpringArm->TargetArmLength = Dist_;
+
+		
+
+
 		AddControllerPitchInput(NewAxisValue);
-		//AddActorLocalRotation(YawRotation);
+
+		
+
 	
 }
 

@@ -181,6 +181,7 @@ private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 		UForceFeedbackEffect* ForceFeedBack;
 
-	
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = SpringArm, Meta = (AllowPrivateAccess = true))
+	float Dist_ = 0.0f;
 
 };
